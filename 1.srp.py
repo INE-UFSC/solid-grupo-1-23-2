@@ -13,6 +13,11 @@ class Animal:
     def get_name(self) -> str:
         pass
 
+#problema: A classe do animal tinha mais de uma responsabilidade
     # salva no DB
+    #def save(self, animal: Animal): 
+        #pass
+
+class SaveAnimal:
     def save(self, animal: Animal):
         pass

@@ -1,31 +1,50 @@
+from abc import ABC, abstractmethod
+
 """
 Open-Closed Principle
 
 Classes devem estar fechadas para modificação, mas abertas para extensão
 """
-class Animal:
+
+
+class AnimalAbstrato(ABC):
     def __init__(self, name: str):
-        self.name = name
-    
-    def get_name(self) -> str:
+        self.__name = name
+
+    @property
+    def name(self):
+        return self.__name
+
+    @abstractmethod
+    def make_sound(self):
         pass
 
-    def make_sound(self):
-        if self.name == 'lion':
-            print('roar')
-        elif self.name == 'mouse':
-            print('squeak')
-        else:
-            print('...')
+class Lion(AnimalAbstrato):
+    def __init__(self):
+        super().__init__('Lion')
 
-animals = [
-    Animal('lion'),
-    Animal('mouse')
-]
+    def make_sound(self):
+        print('roar')
+
+class Mouse(AnimalAbstrato):
+    def __init__(self):
+        super().__init__('Mouse')
+
+    def make_sound(self):
+        print('squeak')
+        
+class Penguin(AnimalAbstrato):
+    def __init__(self):
+        super().__init__('Penguin')
+
+    def make_sound(self):
+        print('quack')
 
 def animal_sound(animals: list):
     for animal in animals:
         animal.make_sound()
+        
+animals = [Lion(), Mouse(), Penguin()]
 
 animal_sound(animals)
 
@@ -44,8 +63,48 @@ class Discount:
         self.price = price
 
     def give_discount(self):
-            if self.customer == 'fav':
-                return self.price * 0.2
-            if self.customer == 'vip':
-                return self.price * 0.4
+            return f"R$ {self.price * (1 - self.customer.discount()):.02f}"
+            
+class ClienteAbstract(ABC):
+    def __init__(self, name: str):
+        self.__name = name
+        
+    def discount(self):
+        pass
+    
+
+class ClienteFav(ClienteAbstract):
+    def __init__(self, name):
+        super().__init__(name)
+    
+    def discount(self):
+        return 0.2
+
+    
+class ClienteVip(ClienteAbstract):
+    def __init__(self, name):
+        super().__init__(name)
+    
+    def discount(self):
+        return 0.4
+    
+class ClienteRuim(ClienteAbstract):
+    def __init__(self, name):
+        super().__init__(name)
+    
+    def discount(self):
+        return -0.05
+
+
+def give_discount(clients: list, valor: float):
+    for client in clients:
+        print(Discount(client, valor).give_discount())
+
+cliente1 = ClienteVip('Pedro')
+cliente2 = ClienteFav('Augusto')
+cliente3 = ClienteRuim('Tom')
+clients=[cliente1,cliente2,cliente3]
+
+give_discount(clients, 100)
+
 
